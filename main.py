@@ -1,12 +1,9 @@
 import pandas as pd
-from ScrapeVideo import ScrapeVideo
 from SentimentProducer import SentimentProducer
-import json
-from collections import defaultdict
-from WebCrawler import WebCralerSearch
-from ScrapeVideo import ScrapeVideos
-from StockAssociation import StockAssociation
-from Utils import Utils
+from InternetScraper.WebCrawler import WebCralerSearch
+from InternetScraper.ScrapeVideo import ScrapeVideos
+from AssetLookUpTable.StockAssociation import StockAssociation
+from WordUtils.Utils import Utils
 
 
 # Press the green button in the gutter to run the script.

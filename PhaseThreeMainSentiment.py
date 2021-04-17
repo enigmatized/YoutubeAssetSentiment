@@ -1,19 +1,12 @@
 import pandas as pd
-from ScrapeVideo import ScrapeVideo
 from SentimentProducer import SentimentProducer
-import json
-from collections import defaultdict
-from WebCrawler import WebCralerSearch
-from ScrapeVideo import ScrapeVideos
-from StockAssociation import StockAssociation
-from Utils import Utils
-from datetime import datetime
-from LookUpTable import LookUpTable
-
+from AssetLookUpTable.StockAssociation import StockAssociation
+from WordUtils.Utils import Utils
 
 if __name__ == '__main__':
     print("__________Load Old Df______________")
-    df = pd.read_csv("OldData/04_04_2021_12_09_55.csv")
+    df = pd.read_csv("OldData/16_04_2021_17_16_00.csv")
+    print(df.columns)
 
     print("__________Post nuDf Creation___________")
     nuDf = StockAssociation().transformDf(50, df)
@@ -27,7 +20,7 @@ if __name__ == '__main__':
 
 
 
-    print("__________Semtiment Producer___________")
+    print("__________Semtiment Specific Tickers Producer___________")
     print("BEFORE sentiement analysis shape is ", nuDf.shape)
     #df['Polarity']       = nuDf['SurroudingWords'].apply(SentimentProducer.getPolarity)
     nuDf['Subjectivity']  = nuDf['SurroudingWordsAsString'].apply(SentimentProducer.getSubjectivity)
@@ -37,6 +30,12 @@ if __name__ == '__main__':
     for index, row in nuDf.iterrows():
         print("Stock", row['Stock'], "Polarity", row['Polarity'], "Sentiment",  row['Analysis'])
 
-
-
-
+    #
+    print("__________Semtiment Producer___________")
+    #df['Polarity']       = nuDf['Transcript'].apply(SentimentProducer.getPolarity)
+    df['Subjectivity']  = df['Transcript'].apply(SentimentProducer.getSubjectivity)
+    df['Polarity']      = df['Transcript'].apply(SentimentProducer.getPolarity)
+    df['Analysis']      = df['Polarity'].apply(SentimentProducer.getAnalysis)
+    print("AFTER sentiement analysis shape is ",df.shape)
+    for index, row in df.iterrows():
+        print("Search KeyWord:", row['SearchType'], "Polarity", row['Polarity'], "Sentiment",  row['Analysis'])

@@ -1,14 +1,9 @@
 import pandas as pd
-from ScrapeVideo import ScrapeVideo
-from SentimentProducer import SentimentProducer
-import json
-from collections import defaultdict
-from WebCrawler import WebCralerSearch
-from ScrapeVideo import ScrapeVideos
-from StockAssociation import StockAssociation
-from Utils import Utils
+from InternetScraper.WebCrawler import WebCralerSearch
+from InternetScraper.ScrapeVideo import ScrapeVideos
+from WordUtils.Utils import Utils
 from datetime import datetime
-
+from collections import defaultdict
 
 
 
@@ -21,14 +16,35 @@ if __name__ == '__main__':
     till it successeds oe fails 10x. If it fails more 10x then there is something
     wrong on this side
     """
-    searchPhrases = ["meme+stock", "stock", "GME", "Cardano", "polkadot"]
+    #TODO Instead a generaly search, there needs to be specfic searches done seperatedly
+    #   Meaning, Crypto general Market seniment search
+    #   Specific searches for specific cryptos (ada, BTC, dogeCoin, ect)
+    #   The same goes with stock market and commodities
+
+
+    cryptoSpecificsSearch = ["Ehteurum", "Cardano", "Bitcoin", "chainlink",  "polkadot"]
+
+    stockSpecificsSearch = ["GME", "AAPL", "MSFT", "TSLA"]
+
+    searchPhrases = ["meme+stock","meme+stock+market", "meme+stock+trading", "stock+market", "nasdaq"]+stockSpecificsSearch#"sp500", "russell+2000" ]
+
 
     allLinks=[]
+    dict_searchPhrase_links = defaultdict(list)
+
+    #######SETCTION 1 Gets links of youtube videos videos to scrape###########
     for searchThis in searchPhrases:
-        links    = WebCralerSearch(searchThis,8).getResults()
+        links    = WebCralerSearch(searchThis,10).getResults()
+        dict_searchPhrase_links[searchThis] = dict_searchPhrase_links[searchThis] + links
+
         allLinks = allLinks + links
-    print("AllLinks:", allLinks)
-    dictOfTranscripts = ScrapeVideos().getTranscipts(allLinks)
+
+    #print(type( allLinks), "AllLinks:", allLinks)
+
+    #######SETCTION 2 GETS TRANSCRIPTS OF VIDEOS FROM LINKS#######
+    #dictOfTranscripts = ScrapeVideos().getTranscipts(allLinks)
+    for k, v in dict_searchPhrase_links.items():
+        dict_searchPhrase_links[k] = ScrapeVideos().getTranscipts(v)
 
     # Test Print
     # for k, v in dictOfTranscripts.items():
@@ -37,25 +53,26 @@ if __name__ == '__main__':
 
     #df = pd.DataFrame.from_dict(dictOfTranscripts, orient='index')
 
-    df = pd.DataFrame(columns= ['YoutubeID', 'Transcript'])
-    for k,v in dictOfTranscripts.items():
-        df.loc[len(df.index)] = [k, v]
+    df = pd.DataFrame(columns= ['YoutubeID', 'Transcript', 'SearchType'])
+    for searchPhrase, dictionary in dict_searchPhrase_links.items():
+        for youTubeID, transcript in dictionary.items():
+            df.loc[len(df.index)] = [youTubeID, transcript, searchPhrase]
 
     print("__________DF PRINT______________")
     print(df.shape)
     print(df)
-
+    #
 
     df['VectorOfWords'] = df['Transcript'].apply(Utils().vectorOfWords)
     print("__________DF PRINT______________")
     print(df.shape)
     print(df)
-
-
-    """This Proccess is to save time in the development proccess
-    So there isn't a need to scape youtube everytime we want to test
-    and refine sentiment producing functions. Undecided if this will be saved for later"""
-
+    #
+    #
+    # """This Proccess is to save time in the development proccess
+    # So there isn't a need to scape youtube everytime we want to test
+    # and refine sentiment producing functions. Undecided if this will be saved for later"""
+    #
     print("__________SAVE DF to CSV______________")
     now = datetime.now()
     #print("now =", now) #Test Print
@@ -64,44 +81,11 @@ if __name__ == '__main__':
     directory = "OldData/"
     df.to_csv(directory + dt_string +".csv")
 
-
-
-    print("__________Post nuDf Creation___________")
-    nuDf = StockAssociation().transformDf(50, df)
-    nuDf['SurroudingWordsAsString'] = nuDf['SurroudingWords'].apply(Utils().vectorOfWordsToString)
-    print(nuDf)
-
-
-
-
-    print("__________Semtiment Producer___________")
-    print(nuDf.shape)
-    #df['Polarity']       = nuDf['SurroudingWords'].apply(SentimentProducer.getPolarity)
-    nuDf['Subjectivity']  = nuDf['SurroudingWordsAsString'].apply(SentimentProducer.getSubjectivity)
-    nuDf['Polarity']      = nuDf['SurroudingWordsAsString'].apply(SentimentProducer.getPolarity)
-    nuDf['Analysis']      = nuDf['Polarity'].apply(SentimentProducer.getAnalysis)
-    for index, row in nuDf.iterrows():
-        print("Stock", nuDf['Stock'], "Polarity", nuDf['Polarity'], "Sentiment",  row['Analysis'])
-
-
-
-    #df['Subjectivity']  = df['Transcript'].apply(SentimentProducer.getSubjectivity)
-    #df['Polarity']      = df['Transcript'].apply(SentimentProducer.getPolarity)
-
-
-
-
-
-    # dictOfTranscripts  = ScrapeVideo().getTranscriptByLink('fttA-rNRYG4')
-    # print("dictOfTranscripts", dictOfTranscripts)
     #
-    # df.loc[len(df)]    = dictOfTranscripts+[None]
-    # dictOfTranscripts  = ScrapeVideo().getTranscriptByLink('wYRyBX2xjR8')
-    # df.loc[len(df)]    = dictOfTranscripts + [None]
-    # df['Subjectivity'] = df['transcript'].apply(SentimentProducer.getSubjectivity)
-    # df['Polarity']     = df['transcript'].apply(SentimentProducer.getPolarity)
     #
-
-
-
+    # print("__________Post nuDf Creation___________")
+    # nuDf = StockAssociation().transformDf(50, df)
+    # nuDf['SurroudingWordsAsString'] = nuDf['SurroudingWords'].apply(Utils().vectorOfWordsToString)
+    # print(nuDf)
+    #
 

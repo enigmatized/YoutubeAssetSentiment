@@ -1,4 +1,4 @@
-from LookUpTable import LookUpTable
+from AssetLookUpTable.LookUpTable import LookUpTable
 
 
 
