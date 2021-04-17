@@ -25,6 +25,11 @@ class LookUpTable:
         self.lookUpBySymbol        = None
         self.lookUpBySymbol4Sector = None #TODO Fill This out better
 
+        #TODO FILL IN PASSWORD OR SEPERATE FILE TO LOAD FROM
+        self.RobinHoodUser     = None
+        self.RobinHoodPassword = None
+
+
         if new:
             #Dictionary Loading
             self.localJsonData()
@@ -138,8 +143,11 @@ class LookUpTable:
 
     def addRobinhood(self):
         rh = Robinhood()
-        rh.login(username="garrettpeuse@gmail.com", password="3660652oO!")
-        rh.print_quote("AAPL")
+        if self.RobinHoodUser:
+
+            rh.login(username=self.RobinHoodUser, password=self.RobinHoodPassword)
+            rh.print_quote("AAPL")
+        else: print("You must set your Robinhood passwords up in init")
 
     def addFinnHub(self):
         token = 'c1l4b6a37fko6in50d9g'
