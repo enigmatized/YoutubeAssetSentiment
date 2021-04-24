@@ -5,7 +5,7 @@ from WordUtils.Utils import Utils
 
 if __name__ == '__main__':
     print("__________Load Old Df______________")
-    df = pd.read_csv("OldData/16_04_2021_17_16_00.csv")
+    df = pd.read_csv("OldData/17_04_2021_05_21_59.csv")
     print(df.columns)
 
     print("__________Post nuDf Creation___________")
@@ -23,9 +23,9 @@ if __name__ == '__main__':
     print("__________Semtiment Specific Tickers Producer___________")
     print("BEFORE sentiement analysis shape is ", nuDf.shape)
     #df['Polarity']       = nuDf['SurroudingWords'].apply(SentimentProducer.getPolarity)
-    nuDf['Subjectivity']  = nuDf['SurroudingWordsAsString'].apply(SentimentProducer.getSubjectivity)
-    nuDf['Polarity']      = nuDf['SurroudingWordsAsString'].apply(SentimentProducer.getPolarity)
-    nuDf['Analysis']      = nuDf['Polarity'].apply(SentimentProducer.getAnalysis)
+    nuDf['Subjectivity']  = nuDf['SurroudingWordsAsString'].apply(SentimentProducer.SentimentProducer.getSubjectivity)
+    nuDf['Polarity']      = nuDf['SurroudingWordsAsString'].apply(SentimentProducer.SentimentProducer.getPolarity)
+    nuDf['Analysis']      = nuDf['Polarity'].apply(SentimentProducer.SentimentProducer.getAnalysis)
     print("AFTER sentiement analysis shape is ",nuDf.shape)
     for index, row in nuDf.iterrows():
         print("Stock", row['Stock'], "Polarity", row['Polarity'], "Sentiment",  row['Analysis'])
@@ -33,9 +33,9 @@ if __name__ == '__main__':
     #
     print("__________Semtiment Producer___________")
     #df['Polarity']       = nuDf['Transcript'].apply(SentimentProducer.getPolarity)
-    df['Subjectivity']  = df['Transcript'].apply(SentimentProducer.getSubjectivity)
-    df['Polarity']      = df['Transcript'].apply(SentimentProducer.getPolarity)
-    df['Analysis']      = df['Polarity'].apply(SentimentProducer.getAnalysis)
+    df['Subjectivity']  = df['Transcript'].apply(SentimentProducer.SentimentProducer.getSubjectivity)
+    df['Polarity']      = df['Transcript'].apply(SentimentProducer.SentimentProducer.getPolarity)
+    df['Analysis']      = df['Polarity'].apply(SentimentProducer.SentimentProducer.getAnalysis)
     print("AFTER sentiement analysis shape is ",df.shape)
     for index, row in df.iterrows():
         print("Search KeyWord:", row['SearchType'], "Polarity", row['Polarity'], "Sentiment",  row['Analysis'])

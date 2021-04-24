@@ -5,7 +5,7 @@ import pandas as pd
 from coinmarketcap import Market
 from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-from pyrh import Robinhood
+#from pyrh import Robinhood
 import requests
 import csv
 from datetime import datetime
@@ -136,10 +136,6 @@ class LookUpTable:
 
         print(response.text)
 
-    def addRobinhood(self):
-        rh = Robinhood()
-        rh.login(username="garrettpeuse@gmail.com", password="3660652oO!")
-        rh.print_quote("AAPL")
 
     def addFinnHub(self):
         token = 'c1l4b6a37fko6in50d9g'
@@ -169,7 +165,7 @@ class LookUpTable:
 
 
     def loadLookupTable(self):
-        with open('../lookUpBySymbol.csv', mode='r') as infile:
+        with open('./lookUpBySymbol.csv', mode='r', encoding='mac_roman') as infile:
             reader = csv.reader(infile)
             mydict = {rows[0].lower(): rows[1].lower() for rows in reader}
 

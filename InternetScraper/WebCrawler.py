@@ -5,9 +5,15 @@ import time
 
 class WebCralerSearch:
     def __init__(self, ticker, limit=None):
-        PATH= "C:/Users/garre/chromedriver.exe"
+        #PATH= "C:/Users/garre/chromedriver.exe"
+
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--disable-gpu")
+
+        #browser =
         self.limit=limit
-        driver = webdriver.Chrome(PATH)
+        driver = webdriver.Chrome(options=chrome_options)
 
         #Go to search site of said Ticker
         driver.get("https://www.youtube.com/results?search_query="+ticker)

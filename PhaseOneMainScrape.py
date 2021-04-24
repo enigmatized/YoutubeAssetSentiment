@@ -12,7 +12,7 @@ if __name__ == '__main__':
     """
     TODO So this function seems to be random.
     Sometimes the elements tags work and do not work.
-    I want to create a loop where if it fails mid proccess, It re-try's 
+    I want to create a loop where if it fails mid proccess, It re-try's
     till it successeds oe fails 10x. If it fails more 10x then there is something
     wrong on this side
     """
