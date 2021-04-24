@@ -61,7 +61,9 @@ class PhaseOneRun:
         dt_string = now.strftime("%d_%m_%Y_%H_%M_%S")
         print("date and time =", dt_string) #Test Print
         directory = "OldData/"
-        df.to_csv(directory + dt_string +".csv")
+        self.directoryFileLocation =  directory + dt_string +".csv"
+        df.to_csv(self.directoryFileLocation)
+
 
         #
         #
